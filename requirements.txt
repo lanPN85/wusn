@@ -1,0 +1,9 @@
+pulp
+scipy
+deap
+matplotlib
+prompt_toolkit
+scikit-learn
+tqdm
+ortools
+Cython

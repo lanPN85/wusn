@@ -1,0 +1,68 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+	\usetheme{Antibes}
+}
+\setbeamertemplate{footline}[page number]
+\usepackage{nth}
+\usepackage{graphicx}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{fancyvrb}
+\graphicspath{ {images/} }
+\usepackage{diagbox}
+\usepackage{subfiles}
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+
+\title[Evolutionary Computing]{Relay Placement in Wireless Underground Sensor Networks} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Phan Ngoc Lan - 20142505\\ Nguyen Duy Manh - 20142857\\ Dinh Anh Dung - 20140774}
+\institute[HUST]
+{
+Hanoi University of Science \& Technology  \\
+School of Information \& Communications Technology
+}
+\date{\today}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Overview}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview}
+\tableofcontents
+\end{frame}
+
+\subfile{intro.tex}
+\subfile{heuristics.tex}
+\section{Proposed Methods}
+\subfile{propose1.tex}
+\subfile{propose2.tex}
+\subfile{results.tex}
+
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item Heuristics provide very good running time but tend to be sub-optimal.
+		\item GA approaches can create more optimal solutions in acceptable running time.
+		\item {
+			Future work:
+			\begin{itemize}
+				\item Report results in larger datasets.
+				\item Explore other operators for 2 proposed algorithms.
+				\item Explore methods for improving GA running time.
+				\item Design new model 
+    			\item Consider practical challenges (mobile relay nodes, multiple hops between RNs as well as SNs)
+			\end{itemize}
+		}
+	\end{itemize}
+\end{frame}
+
+\end{document}

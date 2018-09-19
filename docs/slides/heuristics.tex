@@ -1,0 +1,194 @@
+\documentclass[main.tex]{subfiles}
+
+\begin{document}
+\section{Related Works}
+\subsection{A 2-phase method}
+\begin{frame}{A 2-phase method}
+    \begin{itemize}
+        \item {
+            Yuan et al. \footnote{Bo Yuan, Huanhuan Chen, Xin Yao, \textit{Optimal Relay Placement for Lifetime Maximization in Wireless Underground Sensor Networks}, Information Sciences (2017)} divide the problem into two subproblems:
+            \begin{itemize}
+            \item Phase 1: LURNS (Load-Unbalanced Relay Node Selection), solve the problem without load balancing requirement.
+            \item Phase 2: LBSNA (Load-Balanced Sensor Node Assignment), reassign to satisfy load balancing condition.
+            \end{itemize}
+        }
+		\pause
+        \item{
+            In phase 1, the lifetime of WUSN is maximized by selecting a subset of candidate location to deploy RNs, where the assumption is that the workload of RNs is unrestricted such that the SNs can be assigned to the RNs that have the least transmission loss.
+        }
+		\pause
+        \item{
+            In phase 2, reassign SNs to the RNs in LURNS
+        }
+    \end{itemize}
+\end{frame}
+
+\subsection{LURNS}
+\begin{frame}{LURNS-1}
+\textbf{Input: } S and F\\
+\textbf{Output:} R (a subset of F) and Tc\\
+01: R = $\varnothing$\\
+02: \textbf{while} $|R| < Y$\\
+03: \hspace{2mm}\textbf{for} q = 1 \textbf{to} $|F|$ \textbf{do}\\
+04: \hspace{4mm}Calculate $Tc_{q}$ with RNs deployed at $R \cap \left\{f_q\right\} $ \\
+05: \hspace{2mm}\textbf{end}\\
+06: \hspace{2mm}$Tc = Tc_{q^*} = min_{q=1,...,|F|}(Tc_q)$\\
+07: \hspace{2mm}R = $R\cap \left\{f_{q^*}\right\}$\\
+08: \hspace{2mm}F = $F/\left\{f_{q^*}\right\}$\\
+09: \textbf{end}\\
+10: \textbf{return} R and Tc
+\end{frame}
+
+\begin{frame}{LURNS-2}
+\textbf{Input: }S and F\\
+\textbf{Output: }R(a subset of F) and Tc\\
+01: //Initialization\\
+02: R = $\varnothing$\\
+03: \textbf{for} n = 1 \textbf{to} N \textbf{do}\\
+04: \hspace{2mm}\textbf{for} m = 1 \textbf{to} M \textbf{do}\\
+05: \hspace{4mm}Calculate $t_{nm}$ between $s_n$ and an RN deployed at $f_m$\\
+06: \hspace{2mm}\textbf{end}\\
+07: \hspace{2mm}$t_{nm^*} = min_{m=1,...,M}(t_{nm})$\\
+08: \hspace{2mm}$R = R\cap \left\{f_{m^*}\right\}$\\
+09: \textbf{end}\\  
+\end{frame}
+
+\begin{frame}{LURNS-2}
+10: Calculate Tc with RNs deployed at R\\
+11: // Iterative removal\\
+12: \textbf{while} $|R|>Y$\\
+13: \hspace{2mm}\textbf{for} q = 1 \textbf{to} $|R|$ \textbf{do}\\
+14: \hspace{4mm}Calculate $Tc_q$ with RNs deployed at $R/\left\{r_q\right\}$\\
+15: \hspace{2mm}\textbf{end}\\
+16: \hspace{2mm}$Tc = Tc_{q^*} = min_{q=1,...,|R|}(Tc_q)$\\
+17: \hspace{2mm}$R = R/\left\{r_{q^*}\right\}$\\
+18: \textbf{end}\\
+19: \textbf{return} R and Tc\\ 
+\end{frame}
+
+\subsection{LBSNA}
+\begin{frame}{LBSNA-1}
+\textbf{Input:} S and R\\
+\textbf{Output:} A (assignment index matrix $A^{'}$) and Tc\\
+01: //Initialization\\
+02: $A = \left\{a_{ny}\right\}_{NxY} = \left\{0\right\}_{NxY}$\\
+03: $W = \left\{w_{y}\right\}_{1xY} = \left\{0\right\}_{1xY}$\\
+04: \textbf{for} n = 1 \textbf{to} $N$ \textbf{do}\\
+05: \hspace{2mm}$a_{ny^*} = 1, t_{ny^*} = min_{y=1,...,Y}(t_{ny})$\\
+06: \hspace{2mm}$w_{y^*} = w_{y^*} + 1$\\
+07: \textbf{end}\\
+08: // Release the heavily loaded RNs one by one\\
+09: \textbf{for} y = 1 \textbf{to} Y \textbf{do}\\
+10: \hspace{2mm}Select an RN $r_q$ with maximum $w_q, r_q \in R$\\
+11: \hspace{2mm}\textbf{while} $w_q > N/Y$\\
+12: \hspace{4mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+13: \hspace{4mm}$RNlist = R/\left\{r_q\right\}$\\
+\end{frame}
+
+\begin{frame}{LBSNA-1}
+14: \hspace{4mm}$t_{n^*q} = min(t_{np}), s_n \in SNlist$ and $r_p \in RNlist$\\
+15: \hspace{4mm}//Update\\
+16: \hspace{4mm}$a_{n^*q} = 0; w_q = w_q - 1$\\
+17: \hspace{4mm}$a_{n^*p^*} = 1; w_{p^*} = w_{p^*} + 1$\\
+18: \hspace{2mm}\textbf{end}\\
+19: \hspace{2mm}//Remove\\
+20: \hspace{2mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+21: \hspace{2mm}$S = S/SNlist$\\
+22: \hspace{2mm}$R = R/\left\{r_q\right\}$\\
+23: \textbf{end}\\
+24: Calculate Tc given A\\
+25: \textbf{Return} A and Tc\\
+\end{frame}
+
+\begin{frame}{LBSNA-2}
+\textbf{Input:} S and R\\
+\textbf{Output:} A (assignment index matrix $A^{'}$) and Tc\\
+01: //Initialization\\
+02: $A = \left\{a_{ny}\right\}_{NxY} = \left\{0\right\}_{NxY}$\\
+03: $W = \left\{w_{y}\right\}_{1xY} = \left\{0\right\}_{1xY}$\\
+04: \textbf{for} n = 1 \textbf{to} $N$ \textbf{do}\\
+05: \hspace{2mm}$a_{ny^*} = 1, t_{ny^*} = min_{y=1,...,Y}(t_{ny})$\\
+06: \hspace{2mm}$w_{y^*} = w_{y^*} + 1$\\
+07: \textbf{end}\\
+08: //Load the lightly loaded RNs one by one\\
+09: \textbf{for} y = 1 \textbf{to} Y \textbf{do}\\
+10: \hspace{2mm}Select an RN $r_q$ with minimum $w_q, r_q \in R$\\
+11: \hspace{2mm}\textbf{while} $w_q < N/Y$\\
+12: \hspace{4mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+13: \hspace{4mm}$SNlistc = S/SNlist$\\
+\end{frame}
+
+\begin{frame}{LBSNA-2}
+14: \hspace{4mm}$t_{n^*q} = min(t_{np}), s_n \in SNlistc$\\
+15: \hspace{4mm}//Update\\
+16: \hspace{4mm}$r_p = \left\{a_{n^*p} == 1\right\}$\\
+17: \hspace{4mm}$a_{n^*p} = 0; w_p = w_p - 1$\\
+18: \hspace{4mm}$a_{n^*q} = 1; w_{q} = w_{q} + 1$\\
+19: \hspace{2mm}\textbf{end}\\
+20: \hspace{2mm}//Remove\\
+21: \hspace{2mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+22: \hspace{2mm}$S = S/SNlist$\\
+23: \hspace{2mm}$R = R/\left\{r_q\right\}$\\
+24: \textbf{end}\\
+25: Calculate Tc given A\\
+26: \textbf{Return} A and Tc\\
+\end{frame}
+
+\begin{frame}{LBSNA-3}
+\footnotesize
+\textbf{Input:} S and R\\
+\textbf{Output:} A (assignment index matrix $A^{'}$) and Tc\\
+01: //Initialization\\
+02: $A = \left\{a_{ny}\right\}_{NxY} = \left\{0\right\}_{NxY}$\\
+03: $W = \left\{w_{y}\right\}_{1xY} = \left\{0\right\}_{1xY}$\\
+04: $DS = \left\{ds_{n}\right\}_{1xN} = \left\{0\right\}_{1xN}$\\
+05: $DR = \left\{dr_{y}\right\}_{1xY} = \left\{0\right\}_{1xY}$\\
+06: \textbf{for} n = 1 \textbf{to} N \textbf{do}\\
+07: \hspace{2mm}$a_{ny^*} = 1, t_{ny^*} = min_{y=1,...,Y}(t_{ny})$\\
+08: \hspace{2mm}$w_{y^*} = w_{y^*} + 1$\\
+09: \hspace{2mm}$ds_n = |s_n - \overline{W}|$\\
+10: \hspace{2mm}$dr_y = |r_y - \overline{W}|$\\
+11: \textbf{end}\\
+\end{frame}
+
+\begin{frame}{LBSNA-3}
+\footnotesize
+12: // Release of Load the RNs\\
+13: \textbf{for} y = 1 \textbf{to} Y \textbf{do}\\
+14: \hspace{2mm}Select an SN $s_s$ with maximum $ds_s, s_s \in S$\\
+15: \hspace{2mm}Select an RN $s_q$ with maximum $dr_q, r_q \in S$\\
+16: \hspace{2mm}\textbf{if} $ds_s > dr_q$ \textbf{do}\\
+17: \hspace{4mm}$r_q = \left\{a_{sq} == 1\right\}$\\
+18: \hspace{2mm}\textbf{end}\\
+19: \hspace{2mm}// Release the RN $r_q$\\
+20: \hspace{2mm}\textbf{while} $w_q > N/Y$\\
+21: \hspace{4mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+22: \hspace{4mm}$RNlist = R/\left\{r_q\right\}$\\
+23: \hspace{4mm}$t_{n^*p^*} = min(t_{np}), s_n \in SNlist$ and $r_p\in RNlist$\\
+24: \hspace{4mm}// Update\\
+25: \hspace{4mm}$a_{n^*q} = 0; w_q = w_q - 1$\\
+26: \hspace{4mm}$a_{n^*p^*} = 1; w_{p^*} = w_{p^*} + 1$\\
+27: \hspace{2mm}\textbf{end}
+\end{frame}
+
+\begin{frame}{LBSNA-3}
+\footnotesize
+28: \hspace{2mm}//or load the RN $r_q$\\
+29: \hspace{2mm}\textbf{while} $w_q < N/Y$\\
+30: \hspace{4mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+31: \hspace{4mm}$SNlistc = S/SNlist$\\
+32: \hspace{4mm}$t_{n^*q} = min(t_{np}), s_n \in SNlistc$\\
+33: \hspace{4mm}//Update\\
+34: \hspace{4mm}$r_p = \left\{a_{n^*p} == 1\right\}$\\
+35: \hspace{4mm}$a_{n^*p} = 0; w_p = w_p - 1$\\
+36: \hspace{4mm}$a_{n^*q} = 1; w_{q} = w_{q} + 1$\\
+37: \hspace{2mm}\textbf{end}\\
+38: \hspace{2mm}//Remove\\
+39: \hspace{2mm}$SNlist = \left\{s_n | a_{nq} == 1, s_n \in S\right\}$\\
+40: \hspace{2mm}$S = S/SNlist$\\
+41: \hspace{2mm}$R = R/\left\{r_q\right\}$\\
+42: \textbf{end}\\
+43: Calculate Tc given A\\
+44: \textbf{Return} A and Tc
+\end{frame}
+\end{document}
