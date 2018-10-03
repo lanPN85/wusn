@@ -2,12 +2,12 @@
 
 set -e
 
-OUT_DIR=./out/kmxf/small
-DATA_DIR=./small_data
-RUNS=20
+OUT_DIR=./out/kmxf/full
+DATA_DIR=./data
+RUNS=10
 
 if [ ! -d "$OUT_DIR" ]; then
-            mkdir ${OUT_DIR}
+            mkdir -p ${OUT_DIR}
 fi
 echo > "$OUT_DIR/log.txt"
 

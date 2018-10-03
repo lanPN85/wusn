@@ -4,7 +4,7 @@ set -e
 
 OUT_DIR=./out/mxf_k/medium
 DATA_DIR=./medium_data
-RUNS=20
+RUNS=5
 
 if [ ! -d "$OUT_DIR" ]; then
             mkdir ${OUT_DIR}
