@@ -3,8 +3,8 @@
 set -e
 
 OUT_DIR=./out/mix-ga/${1:-full}
-DATA_GLOB=${2:-"./data/*.test"}
-LOG_SUFFIX=${3:-""}
+DATA_GLOB=${3:-"./data/*.test"}
+LOG_SUFFIX=$2
 RUNS=20
 
 if [ ! -d "$OUT_DIR" ]; then
@@ -17,7 +17,7 @@ do
     echo "Run $it"
     for fn in ${DATA_GLOB}
     do
-        cmd="python3 k_mxf_ga.py -i $fn -o "${OUT_DIR}/run-${it}" 2>>$OUT_DIR/log$LOG_SUFFIX.txt"
+        cmd="python3 k_mxf_ga.py -i $fn -o ${OUT_DIR}/run-${it} 2>>$OUT_DIR/log${LOG_SUFFIX}.txt"
 
         echo "$cmd"
         eval ${cmd}
