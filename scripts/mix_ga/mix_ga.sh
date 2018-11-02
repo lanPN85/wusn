@@ -17,7 +17,7 @@ do
     echo "Run $it"
     for fn in ${DATA_GLOB}
     do
-        cmd="python3 k_mxf_ga.py -i $fn -o ${OUT_DIR}/run-${it} 2>>$OUT_DIR/log${LOG_SUFFIX}.txt"
+        cmd="python3 mix_ga.py -i $fn -o ${OUT_DIR}/run-${it} 2>>$OUT_DIR/log${LOG_SUFFIX}.txt"
 
         echo "$cmd"
         eval ${cmd}
