@@ -5,11 +5,12 @@ def lurns2(inp: WusnInput) -> WusnOutput:
     sensors = inp.sensors
     Y = inp.relay_num
     in_relays = inp.relays[:]
-    out_relays = set()
+    out_relays = list()
+    or_set = set()
     out_relays_to_sensors = {}
     loss = inp.loss  # L(sn, rn) = loss[(sn, rn)]
 
-    print("Starting LURN-2...")
+    print("Starting LURNS-2...")
     for sn in sensors:
         best_rn = None
         t_min = float("inf")
@@ -21,23 +22,27 @@ def lurns2(inp: WusnInput) -> WusnOutput:
         print('[%d] Picking %s' % (len(out_relays), best_rn))
         # out_relays.append(best_rn)
         # in_relays.remove(best_rn)
-        out_relays.add(best_rn)
+        if best_rn not in or_set:
+            or_set.add(best_rn)
+            out_relays.append(best_rn)
+    del or_set
     out_relays = list(out_relays)
 
     while len(out_relays) > Y:
         T_min = float("inf")
         best_rn = None
         for fq in out_relays:
-            Tc = -float("inf")
-
             out2 = out_relays[:]
             out2.remove(fq)
-            for rn in out2:
-                for sn in sensors:
+            losses = []
+            for sn in sensors:
+                Ts = float('inf')
+                for rn in out2:
                     ls = loss[(sn, rn)]
-                    if ls > Tc:
-                        Tc = ls
-
+                    if ls < Ts:
+                        Ts = ls
+                losses.append(Ts)
+            Tc = max(losses)
             if Tc < T_min:
                 T_min = Tc
                 best_rn = fq

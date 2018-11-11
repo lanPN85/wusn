@@ -50,6 +50,7 @@ if __name__ == '__main__':
             continue
 
     elapsed = time.time() - start
+    assert best_out.valid
 
     test_name = os.path.split(args.input)[-1].split('.')[0]
     save_dir = os.path.join(args.output, test_name)

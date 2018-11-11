@@ -1,5 +1,6 @@
 import pyximport
 pyximport.install()
+import copy
 
 from wusn.commons import WusnOutput, RelayPosition
 from . import cutils
@@ -13,7 +14,7 @@ def lbsna1(prev: WusnOutput, verbose=True) -> WusnOutput:
     inp = prev.input
     _ = inp.loss
     out = WusnOutput(prev.input, sensors=prev.sensors[:],
-                     relays=prev.relays[:], relay_to_sensors=prev.relay_to_sensors.copy())
+                     relays=prev.relays[:], relay_to_sensors=copy.deepcopy(prev.relay_to_sensors))
     verbose_print('Starting LBSNA-1...')
     target_load = len(inp.sensors) // inp.relay_num
     verbose_print('Target load: %d' % target_load)
@@ -33,6 +34,7 @@ def lbsna1(prev: WusnOutput, verbose=True) -> WusnOutput:
 def unload_relay(chosen: RelayPosition, relays, out: WusnOutput, target_load, verbose=True):
     """
     Unloads a relay until it reaches the specified target load. Modifies out in place.
+
     :param verbose:
     :param chosen: The chosen relay
     :param relays: The list of relays to consider. Should not contain chosen.
@@ -57,18 +59,18 @@ def unload_relay(chosen: RelayPosition, relays, out: WusnOutput, target_load, ve
 
 
 def _find_best_pair(relays, sensors, losses):
-    return cutils.find_best_pair(relays, sensors, losses)
-    # best_pair = (None, None)
-    # best_loss = float('inf')
-    #
-    # for rn in relays:
-    #     for sn in sensors:
-    #         loss = losses[(sn, rn)]
-    #         if loss < best_loss:
-    #             best_loss = loss
-    #             best_pair = (sn, rn)
-    #
-    # return best_pair
+    # return cutils.find_best_pair(relays, sensors, losses)
+    best_pair = (None, None)
+    best_loss = float('inf')
+
+    for rn in relays:
+        for sn in sensors:
+            loss = losses[(sn, rn)]
+            if loss < best_loss:
+                best_loss = loss
+                best_pair = (sn, rn)
+
+    return best_pair
 
 
 def _find_optimal(relays, out: WusnOutput):

@@ -1,5 +1,6 @@
 import pyximport
 pyximport.install()
+import copy
 
 from wusn.commons import WusnOutput, RelayPosition
 from . import cutils
@@ -13,7 +14,7 @@ def lbsna2(prev: WusnOutput, verbose=True) -> WusnOutput:
     inp = prev.input
     _ = inp.loss
     out = WusnOutput(prev.input, sensors=prev.sensors[:],
-                     relays=prev.relays[:], relay_to_sensors=prev.relay_to_sensors.copy())
+                     relays=prev.relays[:], relay_to_sensors=copy.deepcopy(prev.relay_to_sensors))
     verbose_print('Starting LBSNA-2...')
     target_load = len(inp.sensors) // inp.relay_num
     verbose_print('Target load: %d' % target_load)
@@ -33,6 +34,7 @@ def lbsna2(prev: WusnOutput, verbose=True) -> WusnOutput:
 def load_relay(chosen: RelayPosition, relays, out: WusnOutput, target_load, verbose=True):
     """
     Loads up a relay until it reaches the specified target load. Modifies out in place.
+
     :param verbose:
     :param chosen: The chosen relay
     :param relays: The list of relays to consider. Should not contain chosen.
@@ -46,9 +48,12 @@ def load_relay(chosen: RelayPosition, relays, out: WusnOutput, target_load, verb
 
     a_sensors = []
     for rn in relays:
+        if rn == chosen:
+            continue
         a_sensors.extend(out.relay_to_sensors[rn])
-    e_sensors = out.relay_to_sensors[chosen]
-    sensors = list(filter(lambda s: s not in e_sensors, a_sensors))
+    sensors = a_sensors
+    # e_sensors = out.relay_to_sensors[chosen]
+    # sensors = list(filter(lambda s: s not in e_sensors, a_sensors))
 
     while len(out.relay_to_sensors[chosen]) < target_load:
         verbose_print(' Relay load: %d' % len(out.relay_to_sensors[chosen]))
@@ -67,16 +72,6 @@ def load_relay(chosen: RelayPosition, relays, out: WusnOutput, target_load, verb
 
 def _find_best_sensor(relay: RelayPosition, sensors, losses):
     return cutils.find_best_sensor(relay, sensors, losses)
-    # best = None
-    # best_loss = float('inf')
-    #
-    # for sn in sensors:
-    #     loss = losses[(sn, relay)]
-    #     if loss < best_loss:
-    #         best = sn
-    #         best_loss = loss
-    #
-    # return best
 
 
 def _find_optimal(relays, out: WusnOutput):

@@ -14,7 +14,7 @@ def lbsna3(prev: WusnOutput, verbose=True) -> WusnOutput:
     inp = prev.input
     _ = inp.loss
     out = WusnOutput(prev.input, sensors=prev.sensors[:],
-                     relays=prev.relays[:], relay_to_sensors=prev.relay_to_sensors.copy())
+                     relays=prev.relays[:], relay_to_sensors=copy.deepcopy(prev.relay_to_sensors))
     Y = inp.relay_num
     verbose_print('Starting LBSNA-3...')
     target_load = len(inp.sensors) // inp.relay_num
