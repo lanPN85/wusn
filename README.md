@@ -2,4 +2,5 @@
 
 ## Results
 
-[2017-05-22](https://drive.google.com/file/d/1ceqsft2_fCzZQyBD8b9Rot4LQNJOkAYi/view?usp=sharing)
+[HXF, KMXF, Mix-GA](https://drive.google.com/drive/folders/1R2d1Zz5aDRRnrozNGqi_ZEADmA9JTEHO?usp=sharing)
+[Random-GA](https://drive.google.com/drive/folders/1Agc_YZdkhZNnbem33i2IWcjTZ1aY5cnQ?usp=sharing)
